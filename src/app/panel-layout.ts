@@ -39,6 +39,8 @@ import {
   PersianStrategicPanel,
   QadrAssistantPanel,
   WorldMonitoringHubPanel,
+  PremiumBenchmarkPanel,
+  DarkwebDefensivePanel,
 } from '@/components';
 import { SatelliteFiresPanel } from '@/components/SatelliteFiresPanel';
 import { focusInvestmentOnMap } from '@/services/investments-focus';
@@ -287,7 +289,7 @@ export class PanelLayoutManager implements AppModule {
       ).join('')}
       </div>
       <div class="analysis-nav" style="display:flex;gap:8px;flex-wrap:wrap;padding:8px 14px;border-bottom:1px solid var(--border-color);background:var(--bg-secondary)">
-        ${['رسانه','تعارضات','جنگ شناختی','تاب‌آوری','DSS','ESS','OSINT','گزارش‌ساز'].map((item) => `<button class="analysis-nav-chip" style="padding:6px 10px;border-radius:999px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:12px;cursor:default">${item}</button>`).join('')}
+        ${['رسانه','تعارضات','جنگ شناختی','تاب‌آوری','DSS','ESS','OSINT','DarkWeb','گزارش‌ساز'].map((item) => `<button class="analysis-nav-chip" style="padding:6px 10px;border-radius:999px;border:1px solid var(--border-color);background:var(--bg-tertiary);color:var(--text-primary);font-size:12px;cursor:default">${item}</button>`).join('')}
       </div>
       <div class="main-content">
         <div class="map-section" id="mapSection">
@@ -699,6 +701,14 @@ export class PanelLayoutManager implements AppModule {
 
     if (this.shouldCreatePanel('world-monitoring-hub')) {
       this.ctx.panels['world-monitoring-hub'] = new WorldMonitoringHubPanel();
+    }
+
+    if (this.shouldCreatePanel('premium-benchmark')) {
+      this.ctx.panels['premium-benchmark'] = new PremiumBenchmarkPanel();
+    }
+
+    if (this.shouldCreatePanel('darkweb-defensive')) {
+      this.ctx.panels['darkweb-defensive'] = new DarkwebDefensivePanel();
     }
 
     if (this.shouldCreatePanel('airline-intel')) {
