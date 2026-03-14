@@ -38,6 +38,7 @@ const FULL_PANELS: Record<string, PanelConfig> = {
   economic: { name: 'Economic Indicators', enabled: true, priority: 1 },
   'trade-policy': { name: 'Trade Policy', enabled: true, priority: 1 },
   'supply-chain': { name: 'Supply Chain', enabled: true, priority: 1, ...(_desktop && { premium: 'enhanced' as const }) },
+  'scenario-planner': { name: 'سناریوپرداز', enabled: true, priority: 1 },
   finance: { name: 'Financial', enabled: true, priority: 1 },
   tech: { name: 'Technology', enabled: true, priority: 2 },
   crypto: { name: 'Crypto', enabled: true, priority: 2 },
@@ -62,6 +63,14 @@ const FULL_PANELS: Record<string, PanelConfig> = {
   'tech-readiness': { name: 'Tech Readiness Index', enabled: true, priority: 2 },
   'world-clock': { name: 'World Clock', enabled: true, priority: 2 },
   'persian-analysis': { name: 'تحلیل راهبردی فارسی', enabled: true, priority: 1 },
+  'qadr-assistant': { name: 'چت‌بات راهنمای QADR110', enabled: true, priority: 1 },
+  'world-monitoring-hub': { name: 'مرکز تحلیل', enabled: true, priority: 1 },
+  'premium-benchmark': { name: 'مقایسه با سامانه‌های پریمیوم', enabled: true, priority: 1 },
+  'darkweb-defensive': { name: 'رصد دفاعی DarkWeb/DarkNet', enabled: true, priority: 1 },
+  'iran-media-matrix': { name: 'ماتریس رسانه‌ای ایران', enabled: true, priority: 1 },
+  'regional-slices': { name: 'برش‌های منطقه‌ای/شهری/استانی', enabled: true, priority: 1 },
+  'infra-traffic-cyber': { name: 'پایش زیرساخت/ترافیک/سایبر', enabled: true, priority: 1 },
+  'media-pipelines': { name: 'پایپلاین‌های رسانه‌ای ایران/اسرائیل', enabled: true, priority: 1 },
 };
 
 const FULL_MAP_LAYERS: MapLayers = {
@@ -87,6 +96,7 @@ const FULL_MAP_LAYERS: MapLayers = {
   datacenters: false,
   protests: false,
   flights: false,
+  roadTraffic: false,
   military: true,
   natural: true,
   spaceports: false,
@@ -146,6 +156,7 @@ const FULL_MOBILE_MAP_LAYERS: MapLayers = {
   datacenters: false,
   protests: false,
   flights: false,
+  roadTraffic: false,
   military: false,
   natural: true,
   spaceports: false,
@@ -215,6 +226,7 @@ const TECH_PANELS: Record<string, PanelConfig> = {
   events: { name: 'Tech Events', enabled: true, priority: 1 },
   'service-status': { name: 'Service Status', enabled: true, priority: 2 },
   economic: { name: 'Economic Indicators', enabled: true, priority: 2 },
+  'scenario-planner': { name: 'سناریوپرداز', enabled: true, priority: 1 },
   'tech-readiness': { name: 'Tech Readiness Index', enabled: true, priority: 1 },
   'macro-signals': { name: 'Market Radar', enabled: true, priority: 2 },
   'etf-flows': { name: 'BTC ETF Tracker', enabled: true, priority: 2 },
@@ -222,6 +234,14 @@ const TECH_PANELS: Record<string, PanelConfig> = {
   'airline-intel': { name: 'Airline Intelligence', enabled: true, priority: 2 },
   'world-clock': { name: 'World Clock', enabled: true, priority: 2 },
   'persian-analysis': { name: 'تحلیل راهبردی فارسی', enabled: true, priority: 1 },
+  'qadr-assistant': { name: 'چت‌بات راهنمای QADR110', enabled: true, priority: 1 },
+  'world-monitoring-hub': { name: 'مرکز تحلیل', enabled: true, priority: 1 },
+  'premium-benchmark': { name: 'مقایسه با سامانه‌های پریمیوم', enabled: true, priority: 1 },
+  'darkweb-defensive': { name: 'رصد دفاعی DarkWeb/DarkNet', enabled: true, priority: 1 },
+  'iran-media-matrix': { name: 'ماتریس رسانه‌ای ایران', enabled: true, priority: 1 },
+  'regional-slices': { name: 'برش‌های منطقه‌ای/شهری/استانی', enabled: true, priority: 1 },
+  'infra-traffic-cyber': { name: 'پایش زیرساخت/ترافیک/سایبر', enabled: true, priority: 1 },
+  'media-pipelines': { name: 'پایپلاین‌های رسانه‌ای ایران/اسرائیل', enabled: true, priority: 1 },
   monitors: { name: 'My Monitors', enabled: true, priority: 2 },
 };
 
@@ -247,6 +267,7 @@ const TECH_MAP_LAYERS: MapLayers = {
   datacenters: true,
   protests: false,
   flights: false,
+  roadTraffic: false,
   military: false,
   natural: true,
   spaceports: false,
@@ -306,6 +327,7 @@ const TECH_MOBILE_MAP_LAYERS: MapLayers = {
   datacenters: true,
   protests: false,
   flights: false,
+  roadTraffic: false,
   military: false,
   natural: true,
   spaceports: false,
@@ -366,6 +388,7 @@ const FINANCE_PANELS: Record<string, PanelConfig> = {
   economic: { name: 'Economic Data', enabled: true, priority: 1 },
   'trade-policy': { name: 'Trade Policy', enabled: true, priority: 1 },
   'supply-chain': { name: 'Supply Chain', enabled: true, priority: 1 },
+  'scenario-planner': { name: 'سناریوپرداز', enabled: true, priority: 1 },
   'economic-news': { name: 'Economic News', enabled: true, priority: 2 },
   ipo: { name: 'IPOs, Earnings & M&A', enabled: true, priority: 1 },
   heatmap: { name: 'Sector Heatmap', enabled: true, priority: 1 },
@@ -384,6 +407,14 @@ const FINANCE_PANELS: Record<string, PanelConfig> = {
   'airline-intel': { name: 'Airline Intelligence', enabled: true, priority: 2 },
   'world-clock': { name: 'World Clock', enabled: true, priority: 2 },
   'persian-analysis': { name: 'تحلیل راهبردی فارسی', enabled: true, priority: 1 },
+  'qadr-assistant': { name: 'چت‌بات راهنمای QADR110', enabled: true, priority: 1 },
+  'world-monitoring-hub': { name: 'مرکز تحلیل', enabled: true, priority: 1 },
+  'premium-benchmark': { name: 'مقایسه با سامانه‌های پریمیوم', enabled: true, priority: 1 },
+  'darkweb-defensive': { name: 'رصد دفاعی DarkWeb/DarkNet', enabled: true, priority: 1 },
+  'iran-media-matrix': { name: 'ماتریس رسانه‌ای ایران', enabled: true, priority: 1 },
+  'regional-slices': { name: 'برش‌های منطقه‌ای/شهری/استانی', enabled: true, priority: 1 },
+  'infra-traffic-cyber': { name: 'پایش زیرساخت/ترافیک/سایبر', enabled: true, priority: 1 },
+  'media-pipelines': { name: 'پایپلاین‌های رسانه‌ای ایران/اسرائیل', enabled: true, priority: 1 },
   monitors: { name: 'My Monitors', enabled: true, priority: 2 },
 };
 
@@ -409,6 +440,7 @@ const FINANCE_MAP_LAYERS: MapLayers = {
   datacenters: false,
   protests: false,
   flights: false,
+  roadTraffic: false,
   military: false,
   natural: true,
   spaceports: false,
@@ -468,6 +500,7 @@ const FINANCE_MOBILE_MAP_LAYERS: MapLayers = {
   datacenters: false,
   protests: false,
   flights: false,
+  roadTraffic: false,
   military: false,
   natural: true,
   spaceports: false,
@@ -519,6 +552,7 @@ const HAPPY_PANELS: Record<string, PanelConfig> = {
   species: { name: 'Conservation Wins', enabled: true, priority: 1 },
   renewable: { name: 'Renewable Energy', enabled: true, priority: 1 },
   giving: { name: 'Global Giving', enabled: true, priority: 1 },
+  'scenario-planner': { name: 'سناریوپرداز', enabled: true, priority: 2 },
 };
 
 const HAPPY_MAP_LAYERS: MapLayers = {
@@ -543,6 +577,7 @@ const HAPPY_MAP_LAYERS: MapLayers = {
   datacenters: false,
   protests: false,
   flights: false,
+  roadTraffic: false,
   military: false,
   natural: false,
   spaceports: false,
@@ -602,6 +637,7 @@ const HAPPY_MOBILE_MAP_LAYERS: MapLayers = {
   datacenters: false,
   protests: false,
   flights: false,
+  roadTraffic: false,
   military: false,
   natural: false,
   spaceports: false,
@@ -661,12 +697,21 @@ const COMMODITY_PANELS: Record<string, PanelConfig> = {
   'macro-signals': { name: 'Market Radar', enabled: true, priority: 1 },
   'trade-policy': { name: 'Trade Policy', enabled: true, priority: 1 },
   economic: { name: 'Economic Indicators', enabled: true, priority: 1 },
+  'scenario-planner': { name: 'سناریوپرداز', enabled: true, priority: 1 },
   'gulf-economies': { name: 'Gulf & OPEC Economies', enabled: true, priority: 1 },
   'gcc-investments': { name: 'GCC Resource Investments', enabled: true, priority: 2 },
   'airline-intel': { name: 'Airline Intelligence', enabled: true, priority: 2 },
   polymarket: { name: 'Commodity Predictions', enabled: true, priority: 2 },
   'world-clock': { name: 'World Clock', enabled: true, priority: 2 },
   'persian-analysis': { name: 'تحلیل راهبردی فارسی', enabled: true, priority: 1 },
+  'qadr-assistant': { name: 'چت‌بات راهنمای QADR110', enabled: true, priority: 1 },
+  'world-monitoring-hub': { name: 'مرکز تحلیل', enabled: true, priority: 1 },
+  'premium-benchmark': { name: 'مقایسه با سامانه‌های پریمیوم', enabled: true, priority: 1 },
+  'darkweb-defensive': { name: 'رصد دفاعی DarkWeb/DarkNet', enabled: true, priority: 1 },
+  'iran-media-matrix': { name: 'ماتریس رسانه‌ای ایران', enabled: true, priority: 1 },
+  'regional-slices': { name: 'برش‌های منطقه‌ای/شهری/استانی', enabled: true, priority: 1 },
+  'infra-traffic-cyber': { name: 'پایش زیرساخت/ترافیک/سایبر', enabled: true, priority: 1 },
+  'media-pipelines': { name: 'پایپلاین‌های رسانه‌ای ایران/اسرائیل', enabled: true, priority: 1 },
   monitors: { name: 'My Monitors', enabled: true, priority: 2 },
 };
 
@@ -692,6 +737,7 @@ const COMMODITY_MAP_LAYERS: MapLayers = {
   datacenters: false,
   protests: false,
   flights: false,
+  roadTraffic: false,
   military: false,
   natural: true,
   spaceports: false,
@@ -751,6 +797,7 @@ const COMMODITY_MOBILE_MAP_LAYERS: MapLayers = {
   datacenters: false,
   protests: false,
   flights: false,
+  roadTraffic: false,
   military: false,
   natural: true,
   spaceports: false,
@@ -827,6 +874,7 @@ export const LAYER_TO_SOURCE: Partial<Record<keyof MapLayers, DataSourceId[]>> =
   ais: ['ais'],
   natural: ['usgs'],
   weather: ['weather'],
+  roadTraffic: ['road_traffic'],
   outages: ['outages'],
   cyberThreats: ['cyber_threats'],
   protests: ['acled', 'gdelt_doc'],
@@ -862,7 +910,7 @@ export const PANEL_CATEGORY_MAP: Record<string, { labelKey: string; panelKeys: s
   },
   marketsFinance: {
     labelKey: 'header.panelCatMarketsFinance',
-    panelKeys: ['commodities', 'markets', 'economic', 'trade-policy', 'supply-chain', 'finance', 'polymarket', 'macro-signals', 'gulf-economies', 'etf-flows', 'stablecoins', 'crypto', 'heatmap'],
+    panelKeys: ['commodities', 'markets', 'economic', 'trade-policy', 'supply-chain', 'scenario-planner', 'finance', 'polymarket', 'macro-signals', 'gulf-economies', 'etf-flows', 'stablecoins', 'crypto', 'heatmap'],
     variants: ['full'],
   },
   topical: {
@@ -894,14 +942,14 @@ export const PANEL_CATEGORY_MAP: Record<string, { labelKey: string; panelKeys: s
   },
   techMarkets: {
     labelKey: 'header.panelCatMarkets',
-    panelKeys: ['markets', 'finance', 'crypto', 'economic', 'polymarket', 'macro-signals', 'etf-flows', 'stablecoins', 'layoffs', 'monitors', 'world-clock'],
+    panelKeys: ['markets', 'finance', 'crypto', 'economic', 'scenario-planner', 'polymarket', 'macro-signals', 'etf-flows', 'stablecoins', 'layoffs', 'monitors', 'world-clock'],
     variants: ['tech'],
   },
 
   // Finance variant
   finMarkets: {
     labelKey: 'header.panelCatMarkets',
-    panelKeys: ['markets', 'stock-analysis', 'stock-backtest', 'daily-market-brief', 'markets-news', 'heatmap', 'macro-signals', 'analysis', 'polymarket'],
+    panelKeys: ['markets', 'stock-analysis', 'stock-backtest', 'daily-market-brief', 'markets-news', 'heatmap', 'macro-signals', 'scenario-planner', 'analysis', 'polymarket'],
     variants: ['finance'],
   },
   fixedIncomeFx: {
@@ -921,7 +969,7 @@ export const PANEL_CATEGORY_MAP: Record<string, { labelKey: string; panelKeys: s
   },
   centralBanksEcon: {
     labelKey: 'header.panelCatCentralBanks',
-    panelKeys: ['centralbanks', 'economic', 'trade-policy', 'supply-chain', 'economic-news'],
+    panelKeys: ['centralbanks', 'economic', 'scenario-planner', 'trade-policy', 'supply-chain', 'economic-news'],
     variants: ['finance'],
   },
   dealsInstitutional: {
@@ -948,7 +996,7 @@ export const PANEL_CATEGORY_MAP: Record<string, { labelKey: string; panelKeys: s
   },
   commodityEcon: {
     labelKey: 'header.panelCatCommodityEcon',
-    panelKeys: ['trade-policy', 'economic', 'gulf-economies', 'gcc-investments', 'finance', 'polymarket', 'airline-intel', 'world-clock', 'monitors'],
+    panelKeys: ['trade-policy', 'economic', 'scenario-planner', 'gulf-economies', 'gcc-investments', 'finance', 'polymarket', 'airline-intel', 'world-clock', 'monitors'],
     variants: ['commodity'],
   },
 
