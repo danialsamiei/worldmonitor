@@ -37,6 +37,7 @@ import {
   AirlineIntelPanel,
   AviationCommandBar,
   PersianStrategicPanel,
+  ScenarioPlannerPanel,
 } from '@/components';
 import { SatelliteFiresPanel } from '@/components/SatelliteFiresPanel';
 import { focusInvestmentOnMap } from '@/services/investments-focus';
@@ -545,6 +546,28 @@ export class PanelLayoutManager implements AppModule {
 
     this.createPanel('trade-policy', () => new TradePolicyPanel());
     this.createPanel('supply-chain', () => new SupplyChainPanel());
+
+    this.createPanel('scenario-planner', () => {
+      const panel = new ScenarioPlannerPanel();
+      panel.setScenarioComputedHandler((output) => {
+        this.ctx.mapLayers.ciiChoropleth = true;
+        this.ctx.map?.setLayers(this.ctx.mapLayers);
+
+        const topCountry = output.countryRiskIndex[0];
+        if (topCountry) {
+          this.ctx.map?.highlightCountry(topCountry.code);
+        }
+
+        this.ctx.map?.setCIIScores(
+          output.countryRiskIndex.map((c) => ({
+            code: c.code,
+            score: c.baseline,
+            level: c.baseline >= 75 ? 'critical' : c.baseline >= 60 ? 'high' : c.baseline >= 45 ? 'elevated' : c.baseline >= 30 ? 'normal' : 'low',
+          })),
+        );
+      });
+      return panel;
+    });
 
     this.createNewsPanel('africa', 'panels.africa');
     this.createNewsPanel('latam', 'panels.latam');
