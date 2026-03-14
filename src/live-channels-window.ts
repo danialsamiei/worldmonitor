@@ -98,7 +98,7 @@ export async function initLiveChannelsWindow(containerEl?: HTMLElement): Promise
   }
 
   if (!containerEl) {
-    document.title = `${t('components.liveNews.manage') ?? 'Channel management'} - QADR110`;
+    document.title = `${t('components.liveNews.manage') ?? 'مدیریت کانال‌ها'} - QADR110`;
   }
 
   channels = loadChannelsFromStorage();
@@ -445,7 +445,7 @@ export async function initLiveChannelsWindow(containerEl?: HTMLElement): Promise
   appEl.innerHTML = `
     <div class="live-channels-window-shell">
       <div class="live-channels-window-header">
-        <span class="live-channels-window-title">${escapeHtml(t('components.liveNews.manage') ?? 'Channel management')}</span>
+        <span class="live-channels-window-title">${escapeHtml(t('components.liveNews.manage') ?? 'مدیریت کانال‌ها')}</span>
       </div>
       <div class="live-channels-window-content">
         <div class="live-channels-window-toolbar">
