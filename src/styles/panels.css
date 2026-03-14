@@ -2149,3 +2149,107 @@
 .deduction-result h3 { margin-top: 12px; margin-bottom: 4px; font-size: 1.1em; color: var(--text-bright, #fff); }
 .deduction-result ul { padding-left: 20px; margin-top: 4px; }
 .deduction-result li { margin-bottom: 4px; }
+/* ----------------------------------------------------------
+   Scenario Planner Panel
+   ---------------------------------------------------------- */
+.scenario-planner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+
+.scenario-block {
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 8px;
+  background: var(--bg-elevated, color-mix(in srgb, var(--bg) 85%, black 15%));
+}
+
+.scenario-block h4,
+.scenario-output h4 {
+  margin: 0 0 6px;
+  font-size: 12px;
+}
+
+.scenario-block label {
+  display: block;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.scenario-input {
+  width: 100%;
+  margin-bottom: 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 11px;
+  padding: 6px;
+}
+
+.scenario-block textarea.scenario-input {
+  min-height: 62px;
+  resize: vertical;
+}
+
+.scenario-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.scenario-output {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 8px;
+}
+
+.scenario-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+}
+
+.scenario-table th,
+.scenario-table td {
+  padding: 5px 6px;
+  font-size: 11px;
+  border-bottom: 1px solid var(--border-subtle);
+  text-align: left;
+}
+
+.scenario-bars {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.scenario-bar-row {
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 8px;
+  align-items: center;
+  font-size: 11px;
+}
+
+.scenario-bar-track {
+  position: relative;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--surface-hover);
+  overflow: hidden;
+}
+
+.scenario-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  opacity: 0.75;
+}
+
+.scenario-bar.baseline { background: var(--accent); }
+.scenario-bar.optimistic { background: var(--semantic-normal); }
+.scenario-bar.pessimistic { background: var(--semantic-high); }
