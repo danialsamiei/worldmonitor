@@ -126,6 +126,7 @@ import {
   UcdpEventsPanel,
   TradePolicyPanel,
   SupplyChainPanel,
+  NarrativeAnalysisPanel,
 } from '@/components';
 import { SatelliteFiresPanel } from '@/components/SatelliteFiresPanel';
 import { classifyNewsItem } from '@/services/positive-classifier';
@@ -1035,6 +1036,8 @@ export class DataLoaderManager implements AppModule {
 
     this.updateMonitorResults();
 
+    const narrativePanel = this.ctx.panels['narrative-analysis'] as NarrativeAnalysisPanel | undefined;
+
     try {
       this.ctx.latestClusters = mlWorker.isAvailable
         ? await clusterNewsHybrid(this.ctx.allNews)
@@ -1042,6 +1045,7 @@ export class DataLoaderManager implements AppModule {
 
       const insightsPanel = this.ctx.panels['insights'] as InsightsPanel | undefined;
       insightsPanel?.updateInsights(this.ctx.latestClusters);
+      narrativePanel?.renderNarratives(this.ctx.allNews, this.ctx.latestClusters);
 
       const geoLocated = this.ctx.latestClusters
         .filter((c): c is typeof c & { lat: number; lon: number } => c.lat != null && c.lon != null)
@@ -1059,6 +1063,7 @@ export class DataLoaderManager implements AppModule {
       console.error('[App] Clustering failed, clusters unchanged:', error);
       const insightsPanel = this.ctx.panels['insights'] as InsightsPanel | undefined;
       insightsPanel?.updateInsights([]);
+      narrativePanel?.renderNarratives(this.ctx.allNews, []);
     }
 
     // Happy variant: run multi-stage positive news pipeline + map layers

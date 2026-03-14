@@ -37,6 +37,7 @@ import {
   AirlineIntelPanel,
   AviationCommandBar,
   PersianStrategicPanel,
+  NarrativeAnalysisPanel,
 } from '@/components';
 import { SatelliteFiresPanel } from '@/components/SatelliteFiresPanel';
 import { focusInvestmentOnMap } from '@/services/investments-focus';
@@ -686,6 +687,10 @@ export class PanelLayoutManager implements AppModule {
 
     if (this.shouldCreatePanel('persian-analysis')) {
       this.ctx.panels['persian-analysis'] = new PersianStrategicPanel();
+    }
+
+    if (this.shouldCreatePanel('narrative-analysis')) {
+      this.ctx.panels['narrative-analysis'] = new NarrativeAnalysisPanel();
     }
 
     if (this.shouldCreatePanel('airline-intel')) {

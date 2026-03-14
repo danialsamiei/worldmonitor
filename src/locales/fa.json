@@ -286,7 +286,8 @@
     "gulfIndices": "Gulf Indices",
     "gulfCurrencies": "Gulf Currencies",
     "gulfOil": "Gulf Oil",
-    "airlineIntel": "✈️ Airline Intelligence"
+    "airlineIntel": "✈️ Airline Intelligence",
+    "narrativeAnalysis": "تحلیل روایت"
   },
   "commands": {
     "prefixes": {
