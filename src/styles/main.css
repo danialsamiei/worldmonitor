@@ -5935,7 +5935,7 @@ body.playback-mode .status-dot {
 /* Commodities */
 .commodities-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
 }
 
@@ -12194,6 +12194,39 @@ a.prediction-link:hover {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+.gdelt-topic-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.gdelt-trend-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.gdelt-trend-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.gdelt-trend-value {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.gdelt-trend-value.positive { color: var(--success); }
+.gdelt-trend-value.negative { color: var(--danger); }
 
 /* Hotspot GDELT Context */
 .hotspot-gdelt-context {
@@ -21359,6 +21392,39 @@ body.has-breaking-alert .panels-grid {
   border-color: var(--text-dim);
 }
 
+.cp-global-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+.cp-global-table th {
+  text-align: left;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  padding: 4px 6px;
+  border-bottom: 1px solid var(--border);
+}
+.cp-global-row {
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-subtle, rgba(255,255,255,0.05));
+}
+.cp-global-row:hover { background: var(--overlay-subtle); }
+.cp-global-row td { padding: 6px 6px; vertical-align: middle; }
+.cp-global-flag { font-size: 0.8rem; white-space: nowrap; }
+.cp-global-index { color: var(--text-primary, #e0e0e0); font-variant-numeric: tabular-nums; }
+.cp-global-wow { white-space: nowrap; }
+.cp-global-spread { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.cp-global-fresh { font-size: 0.72rem; }
+.cp-global-pending { color: var(--text-dim); font-size: 0.72rem; font-style: italic; }
+.cp-global-hint {
+  font-size: 0.68rem;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 8px 0 4px;
+}
+
 .cp-range-bar {
   display: flex;
   gap: 4px;
@@ -21396,7 +21462,7 @@ body.has-breaking-alert .panels-grid {
   vertical-align: top;
 }
 
-.gb-item-col { min-width: 100px; }
+.gb-table .gb-item-col { min-width: 100px; text-align: left; }
 
 .gb-country-header {
   text-align: center;
@@ -21407,11 +21473,12 @@ body.has-breaking-alert .panels-grid {
 
 .gb-country-name { font-size: 0.6rem; display: block; }
 
-.gb-item-name {
+.gb-table .gb-item-name {
   font-weight: 500;
   background: var(--overlay-subtle);
   position: sticky;
   left: 0;
+  text-align: left;
 }
 
 .gb-unit {

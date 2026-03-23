@@ -361,6 +361,12 @@
     "bigmacDesc": "Big Mac prices across Middle East countries (Big Mac Index)",
     "bigmacWow": "WoW",
     "bigmacCountry": "Country",
+    "fuelPrices": "Fuel Prices",
+    "fuelPricesDesc": "Retail gasoline and diesel prices across 30+ countries worldwide",
+    "fuelPricesCountry": "Country",
+    "fuelPricesGasoline": "Gasoline",
+    "fuelPricesDiesel": "Diesel",
+    "fuelPricesSource": "Source",
     "groceryBasketDesc": "Grocery basket price comparison across 24 countries worldwide",
     "gulfIndices": "Gulf Indices",
     "gulfCurrencies": "Gulf Currencies",
@@ -853,6 +859,8 @@
       "indicators": "Indicators",
       "gov": "Gov",
       "centralBanks": "Central Banks",
+      "laborMarket": "Labor Market",
+      "metroUnemployment": "Metro Unemployment",
       "noIndicatorData": "No indicator data yet - FRED may be loading",
       "fredKeyMissing": "FRED API key required. Add it in Settings to enable economic indicators.",
       "noSpending": "No recent government awards",
@@ -1733,7 +1741,7 @@
       "noEventsIn7Days": "No events in 7 days"
     },
     "gdeltIntel": {
-      "infoTooltip": "<strong>GDELT Intelligence</strong> Real-time global news monitoring:<ul><li>Curated topic categories (conflicts, cyber, etc.)</li><li>Articles from 100+ languages translated</li><li>Updates every 15 minutes</li></ul>Source: GDELT Project (gdeltproject.org)"
+      "infoTooltip": "<strong>News Intelligence</strong> Real-time global news monitoring:<ul><li>Curated topic categories (conflicts, cyber, etc.)</li><li>Articles from 100+ languages translated</li><li>Updates every 15 minutes</li><li>14-day media tone &amp; volume trend per topic</li><li>14-day media tone &amp; volume trend per topic</li></ul>Source: GDELT Project (gdeltproject.org)"
     },
     "telegramIntel": {
       "infoTooltip": "Real-time signals from monitored Telegram OSINT channels",
@@ -1882,6 +1890,10 @@
     },
     "bigmac": {
       "infoTooltip": "<strong>Updated Big Mac Index</strong> The Economist's Big Mac Index measures purchasing power parity by comparing McDonald's burger prices across countries. Updated when new data is published (quarterly/annually)."
+    },
+    "fuelPrices": {
+      "infoTooltip": "<strong>Fuel Prices</strong> Retail pump prices for gasoline and diesel across 30+ countries, normalized to USD/liter for comparison. Prices are sourced from official government open-data programs and updated weekly. Cheapest and most expensive countries are highlighted. WoW change shown when prior week data is available.",
+      "countries": "countries"
     },
     "panel": {
       "showMethodologyInfo": "Show methodology info",

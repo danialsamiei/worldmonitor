@@ -46,6 +46,7 @@ import {
   GulfEconomiesPanel,
   GroceryBasketPanel,
   BigMacPanel,
+  FuelPricesPanel,
   WorldClockPanel,
   AirlineIntelPanel,
   AviationCommandBar,
@@ -842,6 +843,10 @@ export class PanelLayoutManager implements AppModule {
 
     if (this.shouldCreatePanel('bigmac') && !this.ctx.panels['bigmac']) {
       this.ctx.panels['bigmac'] = new BigMacPanel();
+    }
+
+    if (this.shouldCreatePanel('fuel-prices') && !this.ctx.panels['fuel-prices']) {
+      this.ctx.panels['fuel-prices'] = new FuelPricesPanel();
     }
 
     if (this.shouldCreatePanel('live-news') &&
