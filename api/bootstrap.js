@@ -26,6 +26,7 @@ const BOOTSTRAP_CACHE_KEYS = {
   climateAnomalies: 'climate:anomalies:v1',
   radiationWatch: 'radiation:observations:v1',
   thermalEscalation: 'thermal:escalation:v1',
+  crossSourceSignals: 'intelligence:cross-source-signals:v1',
   wildfires:        'wildfire:fires:v1',
   cyberThreats:     'cyber:threats-bootstrap:v2',
   techReadiness:    'economic:worldbank-techreadiness:v1',
@@ -66,12 +67,14 @@ const BOOTSTRAP_CACHE_KEYS = {
   bigmac:        'economic:bigmac:v1',
   fuelPrices:    'economic:fuel-prices:v1',
   nationalDebt:      'economic:national-debt:v1',
+  marketImplications: 'intelligence:market-implications:v1',
+  fearGreedIndex:    'market:fear-greed:v1',
 };
 
 const SLOW_KEYS = new Set([
   'bisPolicy', 'bisExchange', 'bisCredit', 'minerals', 'giving',
   'sectors', 'etfFlows', 'wildfires', 'climateAnomalies',
-  'radiationWatch', 'thermalEscalation',
+  'radiationWatch', 'thermalEscalation', 'crossSourceSignals',
   'cyberThreats', 'techReadiness', 'progressData', 'renewableEnergy',
   'naturalEvents',
   'cryptoQuotes', 'cryptoSectors', 'defiTokens', 'aiTokens', 'otherTokens',
@@ -85,6 +88,8 @@ const SLOW_KEYS = new Set([
   'bigmac',
   'fuelPrices',
   'nationalDebt',
+  'marketImplications',
+  'fearGreedIndex',
 ]);
 const FAST_KEYS = new Set([
   'earthquakes', 'outages', 'serviceStatuses', 'ddosAttacks', 'trafficAnomalies', 'macroSignals', 'chokepoints', 'chokepointTransits',

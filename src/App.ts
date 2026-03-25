@@ -28,6 +28,8 @@ import type { ServiceStatusPanel } from '@/components/ServiceStatusPanel';
 import type { StablecoinPanel } from '@/components/StablecoinPanel';
 import type { ETFFlowsPanel } from '@/components/ETFFlowsPanel';
 import type { MacroSignalsPanel } from '@/components/MacroSignalsPanel';
+import type { FearGreedPanel } from '@/components/FearGreedPanel';
+import type { HormuzPanel } from '@/components/HormuzPanel';
 import type { StrategicPosturePanel } from '@/components/StrategicPosturePanel';
 import type { StrategicRiskPanel } from '@/components/StrategicRiskPanel';
 import type { GulfEconomiesPanel } from '@/components/GulfEconomiesPanel';
@@ -238,6 +240,14 @@ export class App {
       const panel = this.state.panels['macro-signals'] as MacroSignalsPanel | undefined;
       if (panel) primeTask('macro-signals', () => panel.fetchData());
     }
+    if (shouldPrime('fear-greed')) {
+      const panel = this.state.panels['fear-greed'] as FearGreedPanel | undefined;
+      if (panel) primeTask('fear-greed', () => panel.fetchData());
+    }
+    if (shouldPrime('hormuz-tracker')) {
+      const panel = this.state.panels['hormuz-tracker'] as HormuzPanel | undefined;
+      if (panel) primeTask('hormuz-tracker', () => panel.fetchData());
+    }
     if (shouldPrime('etf-flows')) {
       const panel = this.state.panels['etf-flows'] as ETFFlowsPanel | undefined;
       if (panel) primeTask('etf-flows', () => panel.fetchData());
@@ -289,6 +299,10 @@ export class App {
     if (shouldPrime('supply-chain')) {
       primeTask('supplyChain', () => this.dataLoader.loadSupplyChain());
     }
+    if (shouldPrime('cross-source-signals')) {
+      primeTask('crossSourceSignals', () => this.dataLoader.loadCrossSourceSignals());
+    }
+
     const _wmAccess = getSecretState('WORLDMONITOR_API_KEY').present || getAuthState().user?.role === 'pro';
     if (_wmAccess) {
       if (shouldPrime('stock-analysis')) {
@@ -299,6 +313,9 @@ export class App {
       }
       if (shouldPrime('daily-market-brief')) {
         primeTask('dailyMarketBrief', () => this.dataLoader.loadDailyMarketBrief());
+      }
+      if (shouldPrime('market-implications')) {
+        primeTask('marketImplications', () => this.dataLoader.loadMarketImplications());
       }
     }
 
@@ -1060,6 +1077,12 @@ export class App {
         REFRESH_INTERVALS.stockBacktest,
         () => (getSecretState('WORLDMONITOR_API_KEY').present || getAuthState().user?.role === 'pro') && this.isPanelNearViewport('stock-backtest'),
       );
+      this.refreshScheduler.scheduleRefresh(
+        'market-implications',
+        () => this.dataLoader.loadMarketImplications(),
+        REFRESH_INTERVALS.marketImplications,
+        () => (getSecretState('WORLDMONITOR_API_KEY').present || isProUser()) && this.isPanelNearViewport('market-implications'),
+      );
     }
 
     // Panel-level refreshes (moved from panel constructors into scheduler for hidden-tab awareness + jitter)
@@ -1088,6 +1111,18 @@ export class App {
       () => this.isPanelNearViewport('macro-signals')
     );
     this.refreshScheduler.scheduleRefresh(
+      'fear-greed',
+      () => (this.state.panels['fear-greed'] as FearGreedPanel).fetchData(),
+      REFRESH_INTERVALS.fearGreed,
+      () => this.isPanelNearViewport('fear-greed')
+    );
+    this.refreshScheduler.scheduleRefresh(
+      'hormuz-tracker',
+      () => (this.state.panels['hormuz-tracker'] as HormuzPanel).fetchData(),
+      REFRESH_INTERVALS.hormuzTracker,
+      () => this.isPanelNearViewport('hormuz-tracker')
+    );
+    this.refreshScheduler.scheduleRefresh(
       'strategic-posture',
       () => (this.state.panels['strategic-posture'] as StrategicPosturePanel).refresh(),
       REFRESH_INTERVALS.strategicPosture,
@@ -1110,6 +1145,13 @@ export class App {
       this.refreshScheduler.scheduleRefresh('tradePolicy', () => this.dataLoader.loadTradePolicy(), REFRESH_INTERVALS.tradePolicy, () => this.isPanelNearViewport('trade-policy'));
       this.refreshScheduler.scheduleRefresh('supplyChain', () => this.dataLoader.loadSupplyChain(), REFRESH_INTERVALS.supplyChain, () => this.isPanelNearViewport('supply-chain'));
     }
+
+    this.refreshScheduler.scheduleRefresh(
+      'cross-source-signals',
+      () => this.dataLoader.loadCrossSourceSignals(),
+      REFRESH_INTERVALS.crossSourceSignals,
+      () => this.isPanelNearViewport('cross-source-signals'),
+    );
 
     // Telegram Intel (near real-time, 60s refresh)
     this.refreshScheduler.scheduleRefresh(

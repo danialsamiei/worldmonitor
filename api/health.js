@@ -38,6 +38,7 @@ const BOOTSTRAP_KEYS = {
   comtradeFlows:     'comtrade:flows:v1',
   blsSeries:         'bls:series:v1',
   sanctionsPressure: 'sanctions:pressure:v1',
+  crossSourceSignals: 'intelligence:cross-source-signals:v1',
   sanctionsEntities: 'sanctions:entities:v1',
   radiationWatch:    'radiation:observations:v1',
   consumerPricesOverview:   'consumer-prices:overview:ae',
@@ -53,6 +54,7 @@ const BOOTSTRAP_KEYS = {
   aiTokens:          'market:ai-tokens:v1',
   otherTokens:       'market:other-tokens:v1',
   fredBatch:         'economic:fred:v1:FEDFUNDS:0',
+  fearGreedIndex:    'market:fear-greed:v1',
 };
 
 const STANDALONE_KEYS = {
@@ -92,11 +94,15 @@ const STANDALONE_KEYS = {
   tariffTrendsUs:           'trade:tariffs:v1:840:all:10',
   militaryForecastInputs:   'military:forecast-inputs:stale:v1',
   gscpi:                    'economic:fred:v1:GSCPI:0',
+  marketImplications:       'intelligence:market-implications:v1',
+  hormuzTracker:            'supply_chain:hormuz_tracker:v1',
+  simulationPackageLatest:  'forecast:simulation-package:latest',
+  simulationOutcomeLatest:  'forecast:simulation-outcome:latest',
 };
 
 const SEED_META = {
   earthquakes:      { key: 'seed-meta:seismology:earthquakes',  maxStaleMin: 30 },
-  wildfires:        { key: 'seed-meta:wildfire:fires',          maxStaleMin: 120 },
+  wildfires:        { key: 'seed-meta:wildfire:fires',          maxStaleMin: 360 }, // FIRMS NRT resets at midnight UTC; new-day data takes 3-6h to accumulate
   outages:          { key: 'seed-meta:infra:outages',           maxStaleMin: 30 },
   climateAnomalies: { key: 'seed-meta:climate:anomalies',       maxStaleMin: 120 }, // runs as independent Railway cron (0 */2 * * *)
   unrestEvents:     { key: 'seed-meta:unrest:events',           maxStaleMin: 120 }, // 45min cron; 120 = 2h grace (was 75 = 30min buffer, too tight)
@@ -145,12 +151,13 @@ const SEED_META = {
   corridorrisk:        { key: 'seed-meta:supply_chain:corridorrisk',         maxStaleMin: 120 },
   chokepointTransits:  { key: 'seed-meta:supply_chain:chokepoint_transits',  maxStaleMin: 30 }, // relay every 10min; 30min = 3x interval,
   transitSummaries:    { key: 'seed-meta:supply_chain:transit-summaries',    maxStaleMin: 30 }, // relay every 10min; 30min = 3x interval,
-  usniFleet:           { key: 'seed-meta:military:usni-fleet',               maxStaleMin: 480 },
+  usniFleet:           { key: 'seed-meta:military:usni-fleet',               maxStaleMin: 720 }, // relay loop every 6h; 720 = 2× interval (was 480 = 1.3×, too tight)
   securityAdvisories:  { key: 'seed-meta:intelligence:advisories',           maxStaleMin: 120 },
   customsRevenue:      { key: 'seed-meta:trade:customs-revenue',              maxStaleMin: 1440 },
   comtradeFlows:       { key: 'seed-meta:trade:comtrade-flows',               maxStaleMin: 2880 }, // 24h cron; 2880min = 48h = 2x interval
   blsSeries:           { key: 'seed-meta:economic:bls-series',                maxStaleMin: 2880 }, // daily seed; 2880min = 48h = 2x interval
   sanctionsPressure:   { key: 'seed-meta:sanctions:pressure',                 maxStaleMin: 720 },
+  crossSourceSignals:  { key: 'seed-meta:intelligence:cross-source-signals',  maxStaleMin: 30 }, // 15min cron; 30min = 2x interval
   sanctionsEntities:   { key: 'seed-meta:sanctions:entities',                 maxStaleMin: 1440 }, // 12h cron; 1440min = 24h = 2x interval
   radiationWatch:      { key: 'seed-meta:radiation:observations',             maxStaleMin: 30 },
   groceryBasket:       { key: 'seed-meta:economic:grocery-basket',            maxStaleMin: 10080 }, // weekly seed; 10080 = 7 days
@@ -171,6 +178,8 @@ const SEED_META = {
   otherTokens:       { key: 'seed-meta:market:token-panels', maxStaleMin: 90 },
   fredBatch:         { key: 'seed-meta:economic:fred:v1:FEDFUNDS:0', maxStaleMin: 1500 }, // daily cron
   gscpi:             { key: 'seed-meta:economic:gscpi',               maxStaleMin: 2880 }, // 24h interval; 2880min = 48h = 2x interval
+  fearGreedIndex:    { key: 'seed-meta:market:fear-greed',            maxStaleMin: 720 }, // 6h cron; 720min = 12h = 2x interval
+  hormuzTracker:     { key: 'seed-meta:supply_chain:hormuz_tracker',  maxStaleMin: 2880 }, // daily cron; 2880min = 48h = 2x interval
 };
 
 // Standalone keys that are populated on-demand by RPC handlers (not seeds).
@@ -184,11 +193,14 @@ const ON_DEMAND_KEYS = new Set([
   'corridorrisk', // intermediate key; data flows through transit-summaries:v1
   'serviceStatuses', // RPC-populated; seed-meta written on fresh fetch only, goes stale between visits
   'militaryForecastInputs', // intermediate seed-to-seed pipeline key; only populated after seed-military-flights runs
+  'marketImplications', // LLM-generated inside forecast cron; can fail silently on LLM errors — degrade to WARN not CRIT
+  'simulationPackageLatest', // written by writeSimulationPackage after deep forecast runs; only present after first successful deep run
+  'simulationOutcomeLatest', // written by writeSimulationOutcome after simulation runs; only present after first successful simulation
 ]);
 
 // Keys where 0 records is a valid healthy state (e.g. no airports closed).
 // The key must still exist in Redis; only the record count can be 0.
-const EMPTY_DATA_OK_KEYS = new Set(['notamClosures', 'faaDelays', 'gpsjam']);
+const EMPTY_DATA_OK_KEYS = new Set(['notamClosures', 'faaDelays', 'gpsjam', 'positiveGeoEvents']);
 
 // Cascade groups: if any key in the group has data, all empty siblings are OK.
 // Theater posture uses live → stale → backup fallback chain.
@@ -233,7 +245,8 @@ function dataSize(parsed) {
                       'theaters', 'fleets', 'warnings', 'closures', 'cables',
                       'airports', 'closedIcaos', 'categories', 'regions', 'entries', 'satellites',
                       'sectors', 'statuses', 'scores', 'topics', 'advisories', 'months',
-                      'observations', 'datapoints', 'clusters']) {
+                      'observations', 'datapoints', 'clusters',
+                      'charts']) {
       if (Array.isArray(parsed[k])) return parsed[k].length;
     }
     return Object.keys(parsed).length;
@@ -430,6 +443,21 @@ export default async function handler(req) {
   else overall = 'UNHEALTHY';
 
   const httpStatus = overall === 'HEALTHY' || overall === 'WARNING' ? 200 : 503;
+
+  if (httpStatus === 503) {
+    const problemKeys = Object.entries(checks)
+      .filter(([, c]) => c.status === 'EMPTY' || c.status === 'EMPTY_DATA' || c.status === 'STALE_SEED')
+      .map(([k, c]) => `${k}:${c.status}${c.seedAgeMin != null ? `(${c.seedAgeMin}min)` : ''}`);
+    console.log('[health] %s crits=[%s]', overall, problemKeys.join(', '));
+    // Persist last failure snapshot to Redis (TTL 24h) for post-mortem inspection.
+    // Fire-and-forget — must not block or add latency to the health response.
+    void redisPipeline([['SET', 'health:last-failure', JSON.stringify({
+      at: new Date(now).toISOString(),
+      status: overall,
+      critCount,
+      crits: problemKeys,
+    }), 'EX', 86400]]).catch(() => {});
+  }
 
   const url = new URL(req.url);
   const compact = url.searchParams.get('compact') === '1';
