@@ -742,7 +742,7 @@ export class App {
     this.bootstrapHydrationState = getBootstrapHydrationState();
 
     // Verify OAuth OTT and hydrate auth session BEFORE any UI subscribes to auth state
-    if (BETA_MODE) {
+    if (isProUser()) {
       await initAuthState();
       initAuthAnalytics();
     }
@@ -815,7 +815,7 @@ export class App {
     correlationEngine.registerAdapter(disasterAdapter);
     this.state.correlationEngine = correlationEngine;
     this.eventHandlers.setupUnifiedSettings();
-    if (BETA_MODE) this.eventHandlers.setupAuthWidget();
+    if (isProUser()) this.eventHandlers.setupAuthWidget();
 
     // Phase 4: SearchManager, MapLayerHandlers, CountryIntel
     this.searchManager.init();
