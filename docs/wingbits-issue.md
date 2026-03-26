@@ -35,6 +35,7 @@ The 400 response body is **never read or logged** — only `resp.status` is capt
 ## Probable root causes (in priority order)
 
 ### 1. API contract change (most likely)
+
 Wingbits changed their `/v1/flights` request schema. The `by: 'box'` area format or `unit: 'nm'` field may have been renamed or removed. Since every request fails, not just edge-case viewports, this is the strongest candidate.
 
 **To verify:** Call the endpoint manually and read the 400 response body:
@@ -47,9 +48,11 @@ curl -s -X POST https://customer-api.wingbits.com/v1/flights \
 ```
 
 ### 2. API key expired or revoked
+
 Wingbits may return 400 (not 401) for invalid keys depending on their implementation. Check the Wingbits dashboard to confirm the key is active.
 
 ### 3. Numeric overflow / zero dimensions
+
 If `widthNm` or `heightNm` computes to 0 or `Infinity` (e.g., extreme zoom or polar coordinates), Wingbits may reject the request. This would cause intermittent rather than universal failures, so it is less likely given the logs.
 
 ## What is NOT logged (gap)
