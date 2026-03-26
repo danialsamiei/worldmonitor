@@ -29,9 +29,13 @@ const isoModifiedDate = modifiedDate ? modifiedDate.toISOString() : isoDate;
 const DEFAULT_AUTHOR = 'Elie Habib';
 const DEFAULT_AUTHOR_URL = 'https://x.com/eliehabib';
 const DEFAULT_AUTHOR_BIO = 'Founder of World Monitor. Previously co-founder &amp; CEO of Anghami (NASDAQ: ANGH). Building open-source global intelligence infrastructure.';
+const DEFAULT_AUTHOR_GITHUB = 'koala73';
 const authorName = author || DEFAULT_AUTHOR;
 const resolvedAuthorUrl = authorUrl || (authorName === DEFAULT_AUTHOR ? DEFAULT_AUTHOR_URL : undefined);
 const resolvedAuthorBio = authorBio || (authorName === DEFAULT_AUTHOR ? DEFAULT_AUTHOR_BIO : undefined);
+const avatarSrc = authorName === DEFAULT_AUTHOR
+  ? `https://unavatar.io/github/${DEFAULT_AUTHOR_GITHUB}`
+  : '/favico/apple-touch-icon.png';
 const showUpdated = modifiedDate && modifiedDate.getTime() !== pubDate.getTime();
 const formattedModifiedDate = modifiedDate ? modifiedDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '';
 
@@ -87,7 +91,9 @@ function extractFaqLd(body: string | undefined): object | null {
   if (!body) return null;
   const faqIdx = body.indexOf('## Frequently Asked Questions');
   if (faqIdx === -1) return null;
-  const faqSection = body.slice(faqIdx);
+  const afterFaq = body.slice(faqIdx + '## Frequently Asked Questions'.length);
+  const nextHeading = afterFaq.search(/\n##\s/);
+  const faqSection = nextHeading === -1 ? afterFaq : afterFaq.slice(0, nextHeading);
   const qaRegex = /\*\*(.+?)\*\*\n([^\n*]+(?:\n[^\n*#]+)*)/g;
   const items: { "@type": string; name: string; acceptedAnswer: { "@type": string; text: string } }[] = [];
   let match: RegExpExecArray | null;
@@ -140,7 +146,7 @@ const faqLd = extractFaqLd(rawBody);
       <a href="https://worldmonitor.app" class="btn" target="_blank" rel="noopener noreferrer">Open Dashboard</a>
     </div>
     <div class="author-bio">
-      <img src="https://unavatar.io/github/koala73" alt={authorName} width="48" height="48" class="author-avatar" loading="lazy" onerror="this.src='/favico/apple-touch-icon.png'" />
+      <img src={avatarSrc} alt={authorName} width="48" height="48" class="author-avatar" loading="lazy" onerror="this.src='/favico/apple-touch-icon.png'" />
       <div class="author-info">
         <div class="author-name">
           {resolvedAuthorUrl
