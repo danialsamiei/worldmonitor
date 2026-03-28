@@ -1,7 +1,7 @@
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 // @ts-expect-error — JS module, no declaration file
-import { getCorsHeaders, isDisallowedOrigin } from './_cors.js';
+import { getPublicCorsHeaders } from './_cors.js';
 // @ts-expect-error — JS module, no declaration file
 import { jsonResponse } from './_json-response.js';
 // @ts-expect-error — JS module, no declaration file
@@ -416,23 +416,30 @@ async function executeTool(tool: CacheToolDef): Promise<{ cached_at: string | nu
 // Main handler
 // ---------------------------------------------------------------------------
 export default async function handler(req: Request): Promise<Response> {
-  const corsHeaders = getCorsHeaders(req, 'POST, OPTIONS');
+  // MCP is a public API endpoint secured by API key — allow all origins (claude.ai, Claude Desktop, custom agents)
+  const corsHeaders = getPublicCorsHeaders('POST, OPTIONS');
 
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: corsHeaders });
   }
 
-  if (isDisallowedOrigin(req)) {
-    return rpcError(null, -32001, 'Origin not allowed');
+  // Auth — 3 methods (in priority order):
+  //   1. ?key= query param  — claude.ai connector UI (URL-only, no header config)
+  //   2. Authorization: Bearer <key> — Claude Desktop / standard MCP clients
+  //   3. X-WorldMonitor-Key header — curl, custom integrations
+  const urlKey = new URL(req.url).searchParams.get('key') ?? '';
+  const bearerToken = req.headers.get('Authorization')?.replace(/^Bearer\s+/i, '') ?? '';
+  const resolvedKey = urlKey || bearerToken || req.headers.get('X-WorldMonitor-Key') || '';
+
+  if (!resolvedKey) {
+    return rpcError(null, -32001, 'API key required (pass via ?key=, Authorization: Bearer, or X-WorldMonitor-Key)');
+  }
+  const validKeys = (process.env.WORLDMONITOR_VALID_KEYS || '').split(',').filter(Boolean);
+  if (!validKeys.includes(resolvedKey)) {
+    return rpcError(null, -32001, 'Invalid API key');
   }
 
-  // Auth — always require API key (MCP clients are never same-origin browser requests)
-  const auth = validateApiKey(req, { forceKey: true });
-  if (!auth.valid) {
-    return rpcError(null, -32001, auth.error ?? 'API key required');
-  }
-
-  const apiKey = req.headers.get('X-WorldMonitor-Key') ?? '';
+  const apiKey = resolvedKey;
 
   // Per-key rate limit
   const rl = getMcpRatelimit();

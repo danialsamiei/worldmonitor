@@ -6514,6 +6514,24 @@ describe('phase 3 simulation re-ingestion — matching helpers', () => {
     assert.ok(!matchesChannel({ label: 'Political talks', summary: 'Ceasefire' }, 'shipping_cost_shock'));
   });
 
+  it('matchesChannel risk_off_rotation matches geopolitical sovereign risk scenario (production gap)', () => {
+    // Regression: simulation generates scenario language ("Sovereign Risk Spiral", "Economic Shockwave")
+    // not financial jargon ("risk aversion", "capital flight"). Bridge keywords fix this.
+    assert.ok(matchesChannel({ label: 'Regional Conflict & Sovereign Risk Spiral', summary: 'rapid repricing of sovereign risk' }, 'risk_off_rotation'));
+    assert.ok(matchesChannel({ label: 'Global Economic Shockwave', summary: '' }, 'risk_off_rotation'));
+    assert.ok(matchesChannel({ label: 'Market contagion from India FX crisis', summary: '' }, 'risk_off_rotation'));
+  });
+
+  it('matchesChannel energy_supply_shock matches oil infrastructure scenario (production gap)', () => {
+    assert.ok(matchesChannel({ label: 'Oil infrastructure damage leads to supply disruption', summary: '' }, 'energy_supply_shock'));
+    assert.ok(matchesChannel({ label: 'Crude price spike from supply disruption', summary: '' }, 'energy_supply_shock'));
+  });
+
+  it('matchesChannel shipping_cost_shock matches maritime rerouting scenario (production gap)', () => {
+    assert.ok(matchesChannel({ label: 'Tanker rerouting via Cape of Good Hope raises freight costs', summary: '' }, 'shipping_cost_shock'));
+    assert.ok(matchesChannel({ label: 'Shipping lane closure disrupts global maritime trade', summary: '' }, 'shipping_cost_shock'));
+  });
+
   it('contradictsPremise detects reopening of named route', () => {
     const path = { candidate: { routeFacilityKey: 'Strait of Hormuz', commodityKey: '' } };
     assert.ok(contradictsPremise('Strait of Hormuz reopened after ceasefire', path));
