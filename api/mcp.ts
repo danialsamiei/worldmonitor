@@ -426,6 +426,12 @@ export default async function handler(req: Request): Promise<Response> {
     return new Response(null, { status: 204, headers: corsHeaders });
   }
 
+  // MCP Streamable HTTP transport (2025-03-26) uses POST only.
+  // Return 405 for GET/other so clients don't mistake JSON error for a valid SSE stream.
+  if (req.method !== 'POST') {
+    return new Response(null, { status: 405, headers: { Allow: 'POST, OPTIONS', ...corsHeaders } });
+  }
+
   // Auth chain (in priority order):
   //   1. Authorization: Bearer <oauth_token> — issued by /oauth/token (spec-compliant OAuth 2.0)
   //   2. X-WorldMonitor-Key header — direct API key (curl, custom integrations)
