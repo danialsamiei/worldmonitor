@@ -1,6 +1,6 @@
 /**
  * ListClimateAnomalies RPC -- reads seeded climate data from Railway seed cache.
- * All external Open-Meteo API calls happen in seed-climate.mjs on Railway.
+ * All external Open-Meteo API calls happen in the climate seed scripts on Railway.
  */
 
 import type {
