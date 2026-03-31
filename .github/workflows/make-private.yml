@@ -1,0 +1,18 @@
+name: Make Repository Private
+
+on:
+  workflow_dispatch:
+
+permissions:
+  administration: write
+
+jobs:
+  make-private:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set repository visibility to private
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api --method PATCH /repos/${{ github.repository }} \
+            --field private=true
