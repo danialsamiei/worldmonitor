@@ -1,0 +1,25 @@
+name: Repository Settings
+
+# Enforces repository-level settings: private visibility + auto-merge allowed.
+# Requires a repo-admin PAT stored as ADMIN_TOKEN.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set repository to private and enable auto-merge
+        env:
+          GH_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh api "repos/$REPO" -X PATCH \
+            --field private=true \
+            --field allow_auto_merge=true

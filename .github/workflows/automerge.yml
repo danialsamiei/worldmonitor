@@ -1,0 +1,33 @@
+name: Auto Merge
+
+# Enables auto-merge on a pull request as soon as the Deploy Gate reports success.
+# Requires pull-requests: write + contents: write for the merge call.
+
+on:
+  workflow_run:
+    workflows: ["Deploy Gate"]
+    types: [completed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  automerge:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Enable auto-merge on matching PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          PR=$(gh api "repos/$REPO/pulls" \
+            --jq ".[] | select(.head.sha == \"$SHA\") | .number" | head -1)
+          if [ -z "$PR" ]; then
+            echo "No open PR found for SHA $SHA — nothing to merge"
+            exit 0
+          fi
+          gh pr merge --auto --merge "$PR" --repo "$REPO" \
+            || echo "auto-merge already set or not applicable"
